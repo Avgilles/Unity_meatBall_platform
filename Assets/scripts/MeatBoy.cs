@@ -9,6 +9,9 @@ public class MeatBoy : MonoBehaviour
     public float gravity = 9.8f;
     private Vector3 mouvement;
     private CharacterController controller;
+    public GameObject goutePrefab;
+    public float DelayGoute;
+    private float cptGoutte;
 
     public int JumpMax = 2;
     private int jumpsCount;
@@ -39,7 +42,15 @@ public class MeatBoy : MonoBehaviour
             mouvement.y = jumpSpeed;
             jumpsCount++;
         }
-
+        if(mouvement.x != 0f)
+        {
+            cptGoutte = cptGoutte -Time.deltaTime;
+            if(cptGoutte < 0)
+            {
+                Instantiate(goutePrefab, goutePrefab.transform.position, Quaternion.identity);
+                cptGoutte = DelayGoute;
+            }
+        }
         
     }
 
