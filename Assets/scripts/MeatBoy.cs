@@ -34,17 +34,12 @@ public class MeatBoy : MonoBehaviour
 
         controller.Move(mouvement * Time.deltaTime * speed);
 
-
-        if (Input.GetButtonDown("Jump"))
-            {
-            if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
-            {
-                mouvement.y = jumpSpeed;
-                jumpsCount ++;
-            }
-           
-
+        if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
+        {
+            mouvement.y = jumpSpeed;
+            jumpsCount++;
         }
+
         
     }
 
