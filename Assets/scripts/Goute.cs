@@ -6,6 +6,7 @@ public class Goute : MonoBehaviour
 {
     public Vector3 vel;
     public float force = 20;
+    
     // Start is called before the first frame update
     void Start()
     {
