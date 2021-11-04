@@ -52,7 +52,7 @@ public class chronometre : MonoBehaviour
     {
         if (cpt <= bestScore)
         {
-            PlayerPrefs.SetFloat("ScoreSave", cpt);
+            PlayerPrefs.SetFloat("cpt", cpt);
 
 
         }

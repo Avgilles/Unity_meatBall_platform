@@ -17,12 +17,13 @@ public class MeatBoy : MonoBehaviour
     private float cptGoutte;
 
 
-    public int JumpMax = 2;
+    public int JumpMax = 1;
     private int jumpsCount;
 
     private Vector3 defaultPos;
 
     private Vector3 lastMove;
+    private float verticalVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -34,25 +35,25 @@ public class MeatBoy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        mouvement.z = Input.GetAxisRaw("Horizontal");
 
-
+        // mouvement.y -= gravity * Time.deltaTime;
         mouvement.y -= gravity * Time.deltaTime;
         controller.Move(mouvement * Time.deltaTime * speed);
 
         if (controller.isGrounded)
         {
-            /* Pour le wall jump j'ai déplacer le déplacement que quand il est par terre*/
-            mouvement.z = Input.GetAxisRaw("Horizontal");
+
             lastMove = mouvement;
             //mouvement.y = 0;
             jumpsCount = 0;
         }
-
+       
 
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
         {
-            Debug.Log(lastMove);
+            //Debug.Log(lastMove);
             mouvement.y = jumpSpeed;
             jumpsCount++;
         }
@@ -71,6 +72,33 @@ public class MeatBoy : MonoBehaviour
             }
         }
         
+    }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(!controller.isGrounded && hit.normal.y < 0.1f)
+        {
+            Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.DrawRay(hit.point, hit.normal, Color.blue, 8f);
+                mouvement.y += jumpSpeed ;
+                mouvement.z = -lastMove.z;
+
+                /*
+                mouvement.y = 0;
+                mouvement.Normalize();
+                mouvement *= speed;
+                mouvement.y = verticalVelocity;
+
+                controller.Move(mouvement * Time.deltaTime);
+                lastMove = mouvement; 
+                 */
+
+
+            }
+        }
+
     }
 
     void Awake()
