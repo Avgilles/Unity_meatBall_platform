@@ -20,11 +20,13 @@ public class MeatBoy : MonoBehaviour
     public int JumpMax = 2;
     private int jumpsCount;
 
+    private Vector3 defaultPos;
+
     // Start is called before the first frame update
     void Start()
     {
+        defaultPos = transform.position;
 
-        
     }
 
     // Update is called once per frame
@@ -51,7 +53,6 @@ public class MeatBoy : MonoBehaviour
             cptGoutte -= Time.deltaTime;
             if(cptGoutte <= 0f)
             {
-                Debug.Log(cptGoutte);
                 //Instantiate(gouttePrefab, gouttePrefab.transform.position, Quaternion.identity);
                 GameObject goutte = Instantiate(gouttePrefab, transform.transform.position + goutteOffset, Quaternion.identity) as GameObject;
                 goutte.GetComponent<Goute>().vel = new Vector3(-mouvement.x, speed, 0f);
@@ -64,5 +65,13 @@ public class MeatBoy : MonoBehaviour
     void Awake()
     {
         controller = gameObject.GetComponent<CharacterController>();
+    }
+    public void Die()
+    {
+        Debug.Log("fonction Die lancé");
+        CharacterController cc = controller.GetComponent < CharacterController > ();
+        cc.enabled = false;
+        transform.position = defaultPos;
+        cc.enabled = true;
     }
 }
