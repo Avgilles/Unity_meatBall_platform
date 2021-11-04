@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+[RequireComponent(typeof(CharacterController))]
 
 public class MeatBoy : MonoBehaviour
 {
@@ -9,9 +10,12 @@ public class MeatBoy : MonoBehaviour
     public float gravity = 9.8f;
     private Vector3 mouvement;
     private CharacterController controller;
-    public GameObject goutePrefab;
+    public GameObject gouttePrefab;
+    public Vector3 goutteOffset;
+
     public float DelayGoute;
     private float cptGoutte;
+
 
     public int JumpMax = 2;
     private int jumpsCount;
@@ -42,12 +46,15 @@ public class MeatBoy : MonoBehaviour
             mouvement.y = jumpSpeed;
             jumpsCount++;
         }
-        if(mouvement.x != 0f)
+        if(mouvement.z != 0f)
         {
-            cptGoutte = cptGoutte -Time.deltaTime;
-            if(cptGoutte < 0)
+            cptGoutte -= Time.deltaTime;
+            if(cptGoutte <= 0f)
             {
-                Instantiate(goutePrefab, goutePrefab.transform.position, Quaternion.identity);
+                Debug.Log(cptGoutte);
+                //Instantiate(gouttePrefab, gouttePrefab.transform.position, Quaternion.identity);
+                GameObject goutte = Instantiate(gouttePrefab, transform.transform.position + goutteOffset, Quaternion.identity) as GameObject;
+                goutte.GetComponent<Goute>().vel = new Vector3(-mouvement.x, speed, 0f);
                 cptGoutte = DelayGoute;
             }
         }
