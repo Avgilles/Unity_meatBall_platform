@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class chronometre : MonoBehaviour
 {
@@ -14,12 +15,19 @@ public class chronometre : MonoBehaviour
     private float secondes;
     private float fraction;
     private float bestScore = 600f;
-    private string bestScoreSaving;
-    private string ScoreSaving;
+    private string bestScoreString;
+    private string ScoreSave;
+
 
     private void Awake()
     {
         PlayerPrefs.SetFloat("bestScore", bestScore);
+        minutes = (int)(bestScore / 60f);
+        secondes = (int)(bestScore % 60f);
+        fraction = (int)((bestScore * 100f) % 100f);
+
+        bestScoreString = "Best : " + minutes + ":" + secondes + ":" + fraction;
+
         // cpt = delay;        
     }
     // Start is called before the first frame update
@@ -36,10 +44,18 @@ public class chronometre : MonoBehaviour
         secondes = (int)(cpt % 60f);
         fraction = (int)((cpt*100f)%100f);
 
-        chronoUI.text = "Temps : " + minutes + ":" + secondes + ":" + fraction;
-        if(cpt <= 0)
+        chronoUI.text = bestScoreString + "\n"+"Temps  : " + minutes + ":" + secondes + ":" + fraction;
+        
+    }
+
+    public void End()
+    {
+        if (cpt <= bestScore)
         {
+            PlayerPrefs.SetFloat("ScoreSave", cpt);
+
 
         }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
