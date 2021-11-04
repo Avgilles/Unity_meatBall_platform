@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
@@ -22,6 +22,8 @@ public class MeatBoy : MonoBehaviour
 
     private Vector3 defaultPos;
 
+    private Vector3 lastMove;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,22 +34,31 @@ public class MeatBoy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mouvement.z = Input.GetAxisRaw("Horizontal");
+
+
         mouvement.y -= gravity * Time.deltaTime;
+        controller.Move(mouvement * Time.deltaTime * speed);
+
         if (controller.isGrounded)
         {
-            mouvement.y = 0;
+            /* Pour le wall jump j'ai déplacer le déplacement que quand il est par terre*/
+            mouvement.z = Input.GetAxisRaw("Horizontal");
+            lastMove = mouvement;
+            //mouvement.y = 0;
             jumpsCount = 0;
         }
 
 
-        controller.Move(mouvement * Time.deltaTime * speed);
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
         {
+            Debug.Log(lastMove);
             mouvement.y = jumpSpeed;
             jumpsCount++;
         }
+
+        /** Pour les gouttes  */
+
         if(mouvement.z != 0f)
         {
             cptGoutte -= Time.deltaTime;
@@ -68,7 +79,6 @@ public class MeatBoy : MonoBehaviour
     }
     public void Die()
     {
-        Debug.Log("fonction Die lanc�");
         CharacterController cc = controller.GetComponent < CharacterController > ();
         cc.enabled = false;
         transform.position = defaultPos;
