@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(Rigidbody))]
 
 public class MeatBoy : MonoBehaviour
 {
@@ -25,7 +24,6 @@ public class MeatBoy : MonoBehaviour
 
     private Vector3 lastMove;
     private float verticalVelocity;
-    Rigidbody rgBody;
     private bool isSprinting;
 
 
@@ -33,8 +31,7 @@ public class MeatBoy : MonoBehaviour
     void Start()
     {
         defaultPos = transform.position;
-        rgBody = GetComponent<Rigidbody>();
-        rgBody.freezeRotation = true;
+    
 
     }
 
@@ -43,7 +40,6 @@ public class MeatBoy : MonoBehaviour
     {
         GetInput(true);
 
-        Debug.Log(rgBody.velocity);
         // mouvement.y -= gravity * Time.deltaTime;
         mouvement.y -= gravity * Time.deltaTime;
         
@@ -82,17 +78,22 @@ public class MeatBoy : MonoBehaviour
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if(!controller.isGrounded && hit.normal.y < 0.1f)
+        WallJump(hit);
+
+    }
+
+    void WallJump(ControllerColliderHit hitSent)
+    {
+        if (!controller.isGrounded && hitSent.normal.y < .1f)
         {
             //Debug.Log(hit.normal.z);
-            Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
+            Debug.DrawRay(hitSent.point, hitSent.normal, Color.red, 1.25f);
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.DrawRay(hit.point, hit.normal, Color.blue, 8f);
-                GetInput(false);
-                mouvement = new Vector3(mouvement.x, mouvement.y + jumpSpeed, mouvement.z * hit.normal.z);
-                Debug.Log(mouvement);
+                Debug.DrawRay(hitSent.point, hitSent.normal, Color.blue, 8f);
+                controller.transform.forward = hitSent.normal;
+                controller.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
                 /*
                 mouvement.y = 0;
@@ -107,8 +108,8 @@ public class MeatBoy : MonoBehaviour
 
             }
         }
-
     }
+
     void GetInput(bool deplacement)
     {
         if(deplacement == true)
@@ -120,11 +121,6 @@ public class MeatBoy : MonoBehaviour
         }
         
 
-    }
-    private void FixedUpdate()
-    {
-        
-        rgBody.velocity = mouvement; //Movement but launch upon collision
     }
     void Awake()
     {
