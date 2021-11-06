@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
 
 public class MeatBoy : MonoBehaviour
 {
@@ -24,27 +25,33 @@ public class MeatBoy : MonoBehaviour
 
     private Vector3 lastMove;
     private float verticalVelocity;
+    Rigidbody rgBody;
+    private bool isSprinting;
+
 
     // Start is called before the first frame update
     void Start()
     {
         defaultPos = transform.position;
+        rgBody = GetComponent<Rigidbody>();
+        rgBody.freezeRotation = true;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        mouvement.z = Input.GetAxisRaw("Horizontal");
+        GetInput(true);
 
+        Debug.Log(rgBody.velocity);
         // mouvement.y -= gravity * Time.deltaTime;
         mouvement.y -= gravity * Time.deltaTime;
-        controller.Move(mouvement * Time.deltaTime * speed);
+        
 
         if (controller.isGrounded)
         {
 
-            lastMove = mouvement;
+            //lastMove = mouvement;
             //mouvement.y = 0;
             jumpsCount = 0;
         }
@@ -77,13 +84,15 @@ public class MeatBoy : MonoBehaviour
     {
         if(!controller.isGrounded && hit.normal.y < 0.1f)
         {
+            //Debug.Log(hit.normal.z);
             Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Debug.DrawRay(hit.point, hit.normal, Color.blue, 8f);
-                mouvement.y += jumpSpeed ;
-                mouvement.z = -lastMove.z;
+                GetInput(false);
+                mouvement = new Vector3(mouvement.x, mouvement.y + jumpSpeed, mouvement.z * hit.normal.z);
+                Debug.Log(mouvement);
 
                 /*
                 mouvement.y = 0;
@@ -100,7 +109,23 @@ public class MeatBoy : MonoBehaviour
         }
 
     }
+    void GetInput(bool deplacement)
+    {
+        if(deplacement == true)
+        {
+            mouvement.z = Input.GetAxisRaw("Horizontal");
+            isSprinting = Input.GetKey(KeyCode.LeftShift);
+            if (isSprinting) mouvement.z = mouvement.z *2; 
+            controller.Move(mouvement * Time.deltaTime * speed);
+        }
+        
 
+    }
+    private void FixedUpdate()
+    {
+        
+        rgBody.velocity = mouvement; //Movement but launch upon collision
+    }
     void Awake()
     {
         controller = gameObject.GetComponent<CharacterController>();
