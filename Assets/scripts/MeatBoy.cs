@@ -31,21 +31,27 @@ public class MeatBoy : MonoBehaviour
     void Start()
     {
         defaultPos = transform.position;
-    
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetInput(true);
+
+        if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
+        {
+            //Debug.Log(lastMove);
+            mouvement.y = jumpSpeed;
+            jumpsCount++;
+        }
 
         // mouvement.y -= gravity * Time.deltaTime;
+        GetInput(true);
         mouvement.y -= gravity * Time.deltaTime;
         
 
         if (controller.isGrounded)
         {
+            lastMove = mouvement;
 
             //lastMove = mouvement;
             //mouvement.y = 0;
@@ -54,12 +60,7 @@ public class MeatBoy : MonoBehaviour
        
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
-        {
-            //Debug.Log(lastMove);
-            mouvement.y = jumpSpeed;
-            jumpsCount++;
-        }
+        
 
         /** Pour les gouttes  */
 
@@ -92,20 +93,8 @@ public class MeatBoy : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Debug.DrawRay(hitSent.point, hitSent.normal, Color.blue, 8f);
-                controller.transform.forward = hitSent.normal;
-                controller.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-
-                /*
-                mouvement.y = 0;
-                mouvement.Normalize();
-                mouvement *= speed;
-                mouvement.y = verticalVelocity;
-
-                controller.Move(mouvement * Time.deltaTime);
-                lastMove = mouvement; 
-                 */
-
-
+                
+                // faire le déplacement opposé ??
             }
         }
     }

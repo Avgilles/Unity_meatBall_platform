@@ -126,4 +126,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vel: {x: 5, y: 5, z: 0}
-  force: 20
+  force: 0
