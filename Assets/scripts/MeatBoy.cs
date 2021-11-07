@@ -93,7 +93,8 @@ public class MeatBoy : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Debug.DrawRay(hitSent.point, hitSent.normal, Color.blue, 8f);
-                
+                mouvement.y = mouvement.y + 1;
+
                 // faire le déplacement opposé ??
             }
         }

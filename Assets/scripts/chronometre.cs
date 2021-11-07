@@ -22,6 +22,8 @@ public class chronometre : MonoBehaviour
     private void Awake()
     {
         PlayerPrefs.SetFloat("bestScore", bestScore);
+        bestScore = PlayerPrefs.GetFloat(ScoreSave);
+
         minutes = (int)(bestScore / 60f);
         secondes = (int)(bestScore % 60f);
         fraction = (int)((bestScore * 100f) % 100f);
@@ -52,7 +54,7 @@ public class chronometre : MonoBehaviour
     {
         if (cpt <= bestScore)
         {
-            PlayerPrefs.SetFloat("cpt", cpt);
+            PlayerPrefs.SetFloat(ScoreSave, cpt);
 
 
         }
