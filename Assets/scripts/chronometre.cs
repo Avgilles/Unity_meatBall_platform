@@ -6,57 +6,63 @@ using UnityEngine.SceneManagement;
 
 public class chronometre : MonoBehaviour
 {
-    //public float delay;
-    private float cpt;
-
     public Text chronoUI;
+    private Dictionary<string, float> timeVal;
+    private float chrono = 0f;
+    private float bestScore = 0f;
+    private string bestScoreString, scoreSave;
 
-    private float minutes;
-    private float secondes;
-    private float fraction;
-    private float bestScore = 600f;
-    private string bestScoreString;
-    private string ScoreSave;
-
-
-    private void Awake()
+    void Awake()
     {
-        PlayerPrefs.SetFloat("bestScore", bestScore);
-        bestScore = PlayerPrefs.GetFloat(ScoreSave);
-
-        minutes = (int)(bestScore / 60f);
-        secondes = (int)(bestScore % 60f);
-        fraction = (int)((bestScore * 100f) % 100f);
-
-        bestScoreString = "Best : " + minutes + ":" + secondes + ":" + fraction;
-
-        // cpt = delay;        
+        CheckBestScore();
     }
-    // Start is called before the first frame update
+
     void Start()
     {
-        
+        timeVal = new Dictionary<string, float> { { "minutes", 0f }, { "seconds", 0f }, { "fraction", 0f } };
     }
 
-    // Update is called once per frame
     void Update()
     {
-        cpt += Time.deltaTime;
-        minutes = (int)(cpt / 60f);
-        secondes = (int)(cpt % 60f);
-        fraction = (int)((cpt*100f)%100f);
+        DisplayTime();
+    }
 
-        chronoUI.text = bestScoreString + "\n"+"Temps  : " + minutes + ":" + secondes + ":" + fraction;
-        
+    private float Timer()
+    {
+        chrono += Time.deltaTime;
+        return chrono;
+    }
+
+    private void TradTime(float time, Dictionary<string, float> timeStore)
+    {
+        timeStore["minutes"] = (int)(time / 60f);
+        timeStore["seconds"] = (int)(time % 60f);
+        timeStore["fraction"] = (int)((time * 100f) % 100f);
+    }
+
+    void DisplayTime()
+    {
+        TradTime(Timer(), timeVal);
+        chronoUI.text = bestScoreString + "\n" +
+            "Temps : " + timeVal["minutes"] + " min " + timeVal["seconds"] + ":" + timeVal["fraction"];
+    }
+    void CheckBestScore()
+    {
+        PlayerPrefs.SetFloat("bestScore", bestScore);
+        bestScore = PlayerPrefs.GetFloat(scoreSave);
+        if (PlayerPrefs.HasKey("bestScore"))
+        {
+            Dictionary<string, float> bestScStore = new Dictionary<string, float> { { "minutes", 0f }, { "seconds", 0f }, { "fraction", 0f } };
+            TradTime(bestScore, bestScStore);
+            bestScoreString = "Best : " + bestScStore["minutes"] + " min " + bestScStore["seconds"] + ":" + bestScStore["fraction"];
+        }
     }
 
     public void End()
     {
-        if (cpt <= bestScore)
+        if (chrono < bestScore || bestScore == 0f)
         {
-            PlayerPrefs.SetFloat(ScoreSave, cpt);
-
-
+            PlayerPrefs.SetFloat(scoreSave, chrono);
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
