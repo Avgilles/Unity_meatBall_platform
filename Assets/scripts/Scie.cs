@@ -18,14 +18,14 @@ public class Scie : MonoBehaviour
     {
         transform.Rotate(Vector3.forward * speed * Time.deltaTime);
     }
-
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             Instantiate(gouttePrefab, transform.position, Quaternion.identity);
             GetComponent<Renderer>().material.mainTexture = tache;
             other.GetComponent<MeatBoy>().Die();
         }
     }
+
 }
