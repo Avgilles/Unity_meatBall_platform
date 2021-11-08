@@ -31,7 +31,6 @@ public class platform_move : MonoBehaviour
     void MooveForward()
     {
         Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        Debug.Log(distance);
         if (surPlanette1 == true)
         {
             distance = Vector3.Distance(pos, planete2.position);
@@ -41,7 +40,6 @@ public class platform_move : MonoBehaviour
 
             if (distance < distanceMin)
             {
-                Debug.Log("surplanette2 = true");
                 surPlanette1 = false;
                 surPlanette2 = true;
             }

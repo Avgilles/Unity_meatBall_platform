@@ -25,7 +25,7 @@ public class MeatBoy : MonoBehaviour
     private Vector3 lastMove;
     private float verticalVelocity;
     private bool isSprinting;
-
+    private float zAir;
 
     // Start is called before the first frame update
     void Start()
@@ -37,26 +37,13 @@ public class MeatBoy : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
-        {
-            //Debug.Log(lastMove);
-            mouvement.y = jumpSpeed;
-            jumpsCount++;
-        }
+        Jump();
 
         // mouvement.y -= gravity * Time.deltaTime;
         GetInput(true);
         mouvement.y -= gravity * Time.deltaTime;
         
 
-        if (controller.isGrounded)
-        {
-            lastMove = mouvement;
-
-            //lastMove = mouvement;
-            //mouvement.y = 0;
-            jumpsCount = 0;
-        }
        
 
 
@@ -77,6 +64,22 @@ public class MeatBoy : MonoBehaviour
         }
         
     }
+
+    private void Jump()
+    {
+        if (controller.isGrounded)
+        {
+            zAir = 0;
+            jumpsCount = 0;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Space) && jumpsCount < JumpMax)
+        {
+            //Debug.Log(lastMove);
+            mouvement.y = jumpSpeed;
+            jumpsCount++;
+        }
+    }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         WallJump(hit);
@@ -87,13 +90,14 @@ public class MeatBoy : MonoBehaviour
     {
         if (!controller.isGrounded && hitSent.normal.y < .1f)
         {
-            //Debug.Log(hit.normal.z);
+            Debug.Log(hitSent.normal.z);
             Debug.DrawRay(hitSent.point, hitSent.normal, Color.red, 1.25f);
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                zAir += 1.5f* hitSent.normal.z;
                 Debug.DrawRay(hitSent.point, hitSent.normal, Color.blue, 8f);
-                mouvement.y = mouvement.y + 1;
+                mouvement.y = jumpSpeed;
 
                 // faire le déplacement opposé ??
             }
@@ -105,6 +109,20 @@ public class MeatBoy : MonoBehaviour
         if(deplacement == true)
         {
             mouvement.z = Input.GetAxisRaw("Horizontal");
+            mouvement.z += zAir;
+            if(zAir > 0)
+            {
+                zAir -= Time.deltaTime;
+            } 
+            else if(zAir < 0)
+            {
+                zAir += Time.deltaTime;
+            }
+            else
+            {
+                zAir = 0;
+            }
+
             isSprinting = Input.GetKey(KeyCode.LeftShift);
             if (isSprinting) mouvement.z = mouvement.z *2; 
             controller.Move(mouvement * Time.deltaTime * speed);
