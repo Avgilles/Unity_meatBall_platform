@@ -1,18 +1,32 @@
-# No fraise boy
+# hell for fraise boy
 
-No fraise boy est un jeux de platforme réaliser sur unity.
-Le but est d'arriver en un minimum de temps a attendre la fin du niveaux. Des obstacles se dresseront sur votre route.
+Hell for fraise boy is a small platform game in unity. 
+The goal is to reach the end of the level in the shortest possible time. Obstacles will appear on your way and a stopwatch records the time of the player's course.
 
-* Du Feu pouvant carboniser votre joueur 
+* Fire that can burn your player
 
-Réalisé avec VFX Graph
+Made with VFX Graph
 
-* des scies
-qui se collore de sangs quand le joueur se la prend
+* sawing machines
+that sticks to the blood when the player takes it
 
-* de la lave et le vide
+* lava and emptiness.
 
-A chaque mort le joueur retourne a sa position de départ.
+At each death the player returns to his starting position.
+
+## Player controller
+
+* Move with arrow key
+* Shift for sprint
+* Jump space key
 
 
+**wall Jump** :
+When you use 
 
+[shift + arrow key + jump ] near to a wall 
+the inverse of the force will be added to your character.
+
+**Restart timewhatch**
+Press echap key to enable the menu
+and click on the restart btn
