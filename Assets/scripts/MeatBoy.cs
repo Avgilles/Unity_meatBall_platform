@@ -44,11 +44,6 @@ public class MeatBoy : MonoBehaviour
         mouvement.y -= gravity * Time.deltaTime;
         
 
-       
-
-
-        
-
         /** Pour les gouttes  */
 
         if(mouvement.z != 0f)
