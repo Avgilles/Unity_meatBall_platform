@@ -1,5 +1,7 @@
 # hell for fraise boy
 
+![preview](/preview/preview.gif)
+
 Hell for fraise boy is a small platform game in unity. 
 The goal is to reach the end of the level in the shortest possible time. Obstacles will appear on your way and a stopwatch records the time of the player's course.
 
